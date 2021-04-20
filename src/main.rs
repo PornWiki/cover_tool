@@ -1,6 +1,7 @@
+use http::Uri;
 use std::process::Command;
 use tide::prelude::*;
-use tide::{Body, Request, Response};
+use tide::{Body, Error, Request, Response};
 
 #[derive(Deserialize)]
 struct Person {
@@ -18,6 +19,20 @@ async fn main() -> tide::Result<()> {
 
 async fn person(mut req: Request<()>) -> tide::Result {
     let Person { name, url } = req.body_json().await?;
+
+    if name.contains("..") {
+        return Err(Error::from_str(
+            422,
+            "{name} can't contain '..' due to security reasons.",
+        ));
+    }
+
+    if let Err(_) = &url.parse::<Uri>() {
+        return Err(Error::from_str(
+            422,
+            "{url} must be a proper http / https url.",
+        ));
+    }
 
     let input = format!("/tmp/{}.jpg", name);
     let output = format!("/tmp/{}.webp", name);

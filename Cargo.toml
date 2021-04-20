@@ -8,3 +8,4 @@ edition = "2018"
 tide = "0.16.0"
 serde = { version = "1.0", features = ["derive"] }
 async-std = { version = "1.8.0", features = ["attributes"] }
+http = "0.2.4"
