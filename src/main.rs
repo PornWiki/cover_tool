@@ -55,7 +55,7 @@ async fn person(mut req: Request<()>) -> tide::Result {
         .output()
         .expect("failed to execute process");
 
-    Ok(Response::builder(203)
+    Ok(Response::builder(200)
         .body(Body::from_file(output).await?)
         .content_type("image/webp")
         .build())
